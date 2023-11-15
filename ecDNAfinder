@@ -1,0 +1,61 @@
+#!/bin/bash
+
+script_path="$(readlink -f "$0")"
+script_dir="$(dirname "$script_path")"
+
+while getopts "i:o:p:t:s:" option; do
+  case "${option}" in
+  i) input_dir=${OPTARG} ;;    # Input directory
+  o) output_dir=${OPTARG} ;;   # Output directory
+  p) prob_cutoff=${OPTARG} ;;  # Probability cutoff
+  t) max_cores=${OPTARG} ;;    # Max cores for parallel processing
+  s) summary_only=${OPTARG} ;; # Summary-only mode
+  \?) ;;
+  esac
+done
+
+directories=$(find "$input_dir" -mindepth 1 -maxdepth 1 -type d | grep -Ev '/\.DS_Store$' | sort -n)
+
+####################
+cnv_name="1000000.CNV.bedGraph"
+mat_name="matrix.mtx"
+lm_path=$script_dir"/coef_model_brain.txt"
+####################
+
+if [[ -z $script_dir || -z $lm_path || -z $cnv_name || -z $mat_name || -z $input_dir || -z $prob_cutoff || -z $output_dir ]]; then
+  echo "Missing one or more internal or external arguments." >&2
+  exit 1
+fi
+
+summary_only_lower=$(echo "$summary_only" | tr '[:upper:]' '[:lower:]')
+
+if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summary_only_lower" != "t" ]]; then
+  echo "Processing mode."
+  echo "ecDNAfinder found $(echo "$directories" | wc -l | sed 's/^[[:space:]]*//') cell(s)"
+
+  export script_dir
+  export cell_name
+  export lm_path
+  export cnv_name
+  export mat_name
+  export input_dir
+  export prob_cutoff
+  export output_dir
+
+  execute_command() {
+    cell_dir="$1"
+    python $script_dir/_process.py "$cell_dir" "$script_dir" "$lm_path" "$cnv_name" "$mat_name" "$input_dir" "$output_dir" "$prob_cutoff"
+  }
+
+  export -f execute_command
+
+  echo "$directories" | parallel -j $max_cores execute_command
+
+else
+  echo "Summary-only mode."
+
+fi
+
+python $script_dir/_summarize.py "$input_dir" "$output_dir" "$prob_cutoff"
+
+exit 0
