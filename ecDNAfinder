@@ -19,10 +19,10 @@ directories=$(find "$input_dir" -mindepth 1 -maxdepth 1 -type d | grep -Ev '/\.D
 ####################
 cnv_name="1000000.CNV.bedGraph"
 mat_name="matrix.mtx"
-lm_path=$script_dir"/coef_model_brain.txt"
+lm_dir=$script_dir"/coef_model_brain.txt"
 ####################
 
-if [[ -z $script_dir || -z $lm_path || -z $cnv_name || -z $mat_name || -z $input_dir || -z $prob_cutoff || -z $output_dir ]]; then
+if [[ -z $script_dir || -z $lm_dir || -z $cnv_name || -z $mat_name || -z $input_dir || -z $prob_cutoff || -z $output_dir ]]; then
   echo "Missing one or more internal or external arguments." >&2
   exit 1
 fi
@@ -35,7 +35,7 @@ if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summa
 
   export script_dir
   export cell_name
-  export lm_path
+  export lm_dir
   export cnv_name
   export mat_name
   export input_dir
@@ -44,7 +44,7 @@ if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summa
 
   execute_command() {
     cell_dir="$1"
-    python $script_dir/_process.py "$cell_dir" "$script_dir" "$lm_path" "$cnv_name" "$mat_name" "$input_dir" "$output_dir" "$prob_cutoff"
+    python $script_dir/_process.py "$cell_dir" "$script_dir" "$lm_dir" "$cnv_name" "$mat_name" "$input_dir" "$output_dir"
   }
 
   export -f execute_command

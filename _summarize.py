@@ -14,14 +14,15 @@ if output_dir.endswith('/'):
     output_dir = output_dir.rstrip('/')
 
 sample_name = input_dir.split('/')[-1]
-prediction_dir = output_dir + "/" + "ecDNA_prediction_" + sample_name + '_' + prob_cutoff
+prediction_dir = output_dir + "/" + "ecDNA_prediction_" + sample_name
 summary_dir = output_dir + "/" + "ecDNA_summary_" + sample_name + '_' + prob_cutoff
 
 # %%
 
-prediction_file_list = os.listdir(prediction_dir)
+prediction_file_list = sorted(os.listdir(prediction_dir))
+prediction_file_list = [file for file in prediction_file_list if not file.lower().endswith('.ds_store')]
 
-cell_file_list = os.listdir(input_dir)
+cell_file_list = sorted(os.listdir(input_dir))
 cell_file_list = [file for file in cell_file_list if not file.lower().endswith('.ds_store')]  # for macOS compatibility
 
 # %%
@@ -31,26 +32,24 @@ coord = a.iloc[:, 0:3]
 
 # %%
 
-m_cnv = pd.DataFrame(0, index=coord.index, columns=prediction_file_list)
-m_ratio = m_cnv.copy()
-m_gini = m_cnv.copy()
-m_pred = m_cnv.copy()
+file_paths = [os.path.join(prediction_dir, cell) for cell in prediction_file_list]
+
+dfs = [pd.read_table(file_path, header=0) for file_path in file_paths]
+
+all_data = pd.concat(dfs, axis=1)
+
+m_cnv = all_data[['cnv']]
+m_ratio = all_data[['log2ratio']]
+m_gini = all_data[['gini']]
+m_pred = all_data[['pred']]
+
+m_cnv.columns = prediction_file_list
+m_ratio.columns = prediction_file_list
+m_gini.columns = prediction_file_list
+m_pred.columns = prediction_file_list
 
 # %%
 
-# Loop through ann and read data from files
-for i, cell in enumerate(prediction_file_list):
-    res = pd.read_table(prediction_dir + "/" + cell, header=0)
-
-    m_cnv[cell] = res['cnv']
-    m_ratio[cell] = res['inter.intra.log2ratio']
-    m_gini[cell] = res['gini']
-    m_pred[cell] = res['pred']
-
-# %%
-
-
-# Concatenate output dataframes with 'out'
 final_cnv = pd.concat([coord, m_cnv], axis=1)
 final_cnv.columns = final_cnv.columns.str.replace('.txt', '')
 
@@ -68,7 +67,6 @@ final_pred.columns = final_pred.columns.str.replace('.txt', '')
 if not os.path.exists(summary_dir):
     os.makedirs(summary_dir)
 
-# Write results to files
 final_cnv.to_csv(f'{summary_dir}/{sample_name}_cnv.txt', sep='\t', index=False)
 final_ratio.to_csv(f'{summary_dir}/{sample_name}_ratio.txt', sep='\t', index=False)
 final_gini.to_csv(f'{summary_dir}/{sample_name}_gini.txt', sep='\t', index=False)
@@ -76,9 +74,8 @@ final_pred.to_csv(f'{summary_dir}/{sample_name}_pred.txt', sep='\t', index=False
 
 # %%
 
-binary_pred = final_pred.iloc[:, 3:].copy()
-for i in range(len(binary_pred.columns)):
-    binary_pred[binary_pred.columns[i]] = (binary_pred[binary_pred.columns[i]] > float(prob_cutoff)).astype(int)
+binary_pred = final_pred.iloc[:, 3:]
+binary_pred = (binary_pred > float(prob_cutoff)).astype(int)
 
 count = binary_pred.sum(axis=1)
 freq = count / len(binary_pred.columns)
