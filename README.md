@@ -21,7 +21,7 @@
 * **Single-cell Hi-C contact matrices**
 * **Trained logistic regression model**
 
-Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAfinder` script. Modify in the section below if needed:
+Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAfinder` script. Modify the section below if needed:
 ```
 ####################
 cnv_name="1000000.CNV.bedGraph"
