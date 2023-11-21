@@ -33,6 +33,9 @@ if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summa
   echo "Processing mode."
   echo "ecDNAfinder found $(echo "$directories" | wc -l | sed 's/^[[:space:]]*//') cell(s)"
 
+  sample_name=$(basename "$input_dir")
+  mkdir -p "$output_dir/ecDNA_prediction_$sample_name"
+
   export script_dir
   export cell_name
   export lm_dir

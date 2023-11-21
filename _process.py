@@ -116,8 +116,6 @@ res['pred'] = 1 / (1 + np.exp(-res['eta']))
 res.loc[res['gini'].isna(), 'pred'] = 0
 
 # %%
-if not os.path.exists(prediction_dir):
-    os.makedirs(prediction_dir)
 
 res.to_csv(output_file_path, sep='\t', index=False, header=True, quoting=0)
 
