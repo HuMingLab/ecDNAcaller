@@ -1,4 +1,5 @@
 import os
+
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 # don't know why but solved the large-scale parallelization issue on HPC
 # https://stackoverflow.com/questions/52026652/openblas-blas-thread-init-pthread-create-resource-temporarily-unavailable
@@ -82,11 +83,13 @@ rec = pd.DataFrame(np.zeros((len(res), num_chr), dtype=int), columns=name_chr)
 
 # Any way to vectorize this?
 for j in range(len(res)):
-    overlap = mat[(mat['chrom1'] == res['chr'][j]) & (mat['start1'] == res['start'][j]) | (mat['chrom2'] == res['chr'][j]) & (mat['start2'] == res['start'][j])]
+    overlap = mat[
+        (mat['chrom1'] == res['chr'][j]) & (mat['start1'] == res['start'][j]) | (mat['chrom2'] == res['chr'][j]) & (
+                mat['start2'] == res['start'][j])]
     intra = overlap[(overlap['chrom1'] == overlap['chrom2']) & (overlap['start1'] == res['start'][j])]
     inter = overlap[(overlap['chrom1'] != overlap['chrom2']) & (overlap['chrom1'] == res['chr'][j])]
 
-    #inter = inter[(inter['chrom1'] != 'chrY') & (inter['chrom2'] != 'chrY')]
+    # inter = inter[(inter['chrom1'] != 'chrY') & (inter['chrom2'] != 'chrY')]
 
     res.at[j, 'num.intra.bin'] = len(intra)
     res.at[j, 'num.inter.bin'] = len(inter)
@@ -103,14 +106,14 @@ res.loc[non_zero_sum_rows, 'gini'] = gini_values[non_zero_sum_rows]
 # %%
 res['log2ratio'] = round(np.log2(res['num.inter.bin'] + 1) - np.log2(res['num.intra.bin'] + 1), 4)
 # %%
-linear_model = pd.read_csv(lm_dir, sep='\t', header=0)
+linear_model = pd.read_csv(lm_dir, sep='\t', header=0)  # , index_col=0)
 # %%
 input = res.iloc[:, [0, 1, 2, 3, 7, 6]]
 input.columns = ['chr', 'start', 'end', 'cnv', 'ratio', 'gini']
 input.loc[:, 'cnv'] = input['cnv'].apply(lambda value: min(value, 100))
 # %%
-res['eta'] = linear_model['Estimate'][0] + linear_model['Estimate'][1] * input['cnv'] + linear_model['Estimate'][2] * \
-             input['ratio'] + linear_model['Estimate'][3] * input['gini']
+res['eta'] = linear_model['Estimate'].iloc[0] + linear_model['Estimate'].iloc[1] * input['cnv'] + \
+             linear_model['Estimate'].iloc[2] * input['ratio'] + linear_model['Estimate'].iloc[3] * input['gini']
 res['pred'] = 1 / (1 + np.exp(-res['eta']))
 
 res.loc[res['gini'].isna(), 'pred'] = 0
