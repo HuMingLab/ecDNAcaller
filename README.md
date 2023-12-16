@@ -228,6 +228,8 @@ Figures below demonstrates effect on the Manhattan plot by choosing different cu
 
 ![Rect_Manhtn.0.50.jpg](images%2FRect_Manhtn.0.50.jpg)
 
+Processing speed is at about 1.2 seconds per cell on a single CPU core (Apple M1 Pro), which is about 5 times faster than the logistic regression model.
+
 ## References
 
 * O. Tange (2011): GNU Parallel - The Command-Line Power Tool, The USENIX Magazine, February 2011:42-47.
