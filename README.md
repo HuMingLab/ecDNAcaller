@@ -203,7 +203,7 @@ a single cell (LC500_ACTAGGTGTTACCCAA) at different chromosomal bins (upper: log
 ![LC500_ACTAGGTGTTACCCAA_NN.png](images%2FLC500_ACTAGGTGTTACCCAA_NN.png)
 
 On our validation dataset, we tested how different probability cutoffs affect prediction of positive and negative samples.
-Figure below shows the difference between the true positive rate on positive samples and the false positive rate on negative samples.
+Figure below shows the difference between the true positive rate on positive samples and the false positive rate on negative samples under certain probability cutoff:
 
 ![Delta.png](images%2FDelta.png)
 
