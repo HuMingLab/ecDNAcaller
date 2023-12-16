@@ -161,7 +161,9 @@ chr1	1000000	2000000	chr20	61000000	62000000	1
 
 ## Alternative Method
 
-We recently developed a neural network-based method to achieve a more specific and efficient ecDNA detection.
+We recently developed a neural network-based method that utilizes ideas from image classification as well as logistic regression above to achieve a more specific and efficient ecDNA detection.
+
+### Usage
 
 Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
 
