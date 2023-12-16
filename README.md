@@ -166,41 +166,6 @@ We recently developed a neural network-based method to achieve a more specific a
 Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
 
 ```bash
-python nn_detect.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
-```
-The script will output a file which can also be processed by `CMPlot.R` to generate a Manhattan plot.
-
-The model currently runs on CPU that allows for multiprocessing.
-
-### Performance Comparison
-
-The performance of prediction measured by ROC curve is significantly improved by the neural network model
-on both our validation dataset and a separate dataset that represents another cancer type with distinct Hi-C pattern
-that is hard to distinguish from ecDNA:
-
-### Probability Cutoff Selection
-
-Probability cutoff selection is a trade-off between sensitivity and specificity. 
-For logistic regression, we chose 0.95 for minimized false positive rate. 
-However, our current neural network model tends to reject more uncertain ecDNA candidates 
-and pushes their predicted probability to a small number. Below is a comparison of the predicted probability on
-a single cell at different chromosomal bins (upper: logistic regression; lower: neural network):
-
-On our validation dataset, we tested how different probability cutoffs affect prediction of positive and negative samples.
-Figure below shows the difference between the true positive rate on positive samples and the false positive rate on negative samples.
-
-Ideally this value should be maximized. However, choosing 0.05 as the cutoff will result in more false positives,
-even though the true positive rate is at about 0.98 and the false positive rate is at about 0.02. 
-Thus, we generally recommend a cutoff of 0.1 to 0.3 for the neural network model, depending on the desired sensitivity.
-Figures below demonstrates effect on the Manhattan plot by choosing different cutoff using a mixed positive-negative dataset:
-
-## Alternative Method
-
-We recently developed a neural network-based method to achieve a more specific and efficient ecDNA detection.
-
-Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
-
-```bash
 python ecdna_detect_nn.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
 ```
 The script will output a file which can also be processed by `CMPlot.R` to generate a Manhattan plot.
