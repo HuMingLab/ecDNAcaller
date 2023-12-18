@@ -73,14 +73,18 @@ def slide(matrix, window_0, window_1):
     return test_tensor, centers
 
 
-def summarize(results, chr_index, file_name):
+def summarize(results, chr_index, sample_name, output_dir, prob_threshold):
     record = pd.concat([result for result in results if result is not None], axis=1)
+
+    empty_rows = pd.DataFrame(0, columns=record.columns, index=range(2))
+    record = pd.concat([empty_rows, record, empty_rows]).reset_index(drop=True)
+
+    record.to_csv(output_dir + "/ecDNA_predictions_" + sample_name + "_" + prob_threshold + ".txt", index=False,
+                  sep="\t")
 
     freq = pd.DataFrame(
         {"count": record.iloc[:, 2:].sum(axis=1), "freq": record.iloc[:, 2:].sum(axis=1) / record.iloc[:, 2:].shape[1]})
 
-    freq = pd.concat([pd.DataFrame({"count": [0, 0], "freq": [0, 0]}), freq,
-                      pd.DataFrame({"count": [0, 0], "freq": [0, 0]})]).reset_index(drop=True)
     freq = pd.concat([chr_index, freq], axis=1)
 
     freq[["chr", "start"]] = freq["loc"].str.split("_", expand=True)
@@ -90,7 +94,7 @@ def summarize(results, chr_index, file_name):
 
     freq = freq[freq.columns[2:].tolist() + freq.columns[:2].tolist()]
 
-    freq.to_csv(file_name, index=False, sep="\t")
+    freq.to_csv(output_dir + "/ecDNA_summary_" + sample_name + "_" + prob_threshold + ".txt", index=False, sep="\t")
 
 
 def process_file(model, chr_index, window_0, window_1, prob_threshold, path):
@@ -191,16 +195,15 @@ model = CNN()
 model.load_state_dict(torch.load("model_dec12_dev.pt"))
 model.eval()
 
-dir = sorted([input_dir + "/" + d for d in os.listdir(input_dir)])
+dir = sorted([input_dir + "/" + d for d in os.listdir(input_dir) if ".DS_Store" not in d])
 
 if __name__ == '__main__':
-
     print(f'Processing {len(dir)} cells')
 
     with Pool(processes=num_processes) as pool:
         func = partial(process_file, model, chr_index, window_0, window_1, float(prob_threshold))
         results = pool.map(func, dir)
 
-    summarize(results, chr_index, output_dir + "/ecDNA_summary_" + sample_name + "_" + prob_threshold + ".txt")
+    summarize(results, chr_index, sample_name, output_dir, prob_threshold)
 
     print("Sample", sample_name, "summarized.")

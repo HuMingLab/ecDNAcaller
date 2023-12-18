@@ -170,23 +170,22 @@ Before running the script, please have **PyTorch** and **scipy** installed in ad
 ```bash
 python ecdna_detect_nn.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
 ```
-The script will output a file which can also be processed by `CMPlot.R` to generate a Manhattan plot.
+The script will output a summary file (that can also be processed by `CMPlot.R` to generate a Manhattan plot) and a bin-barcode binary matrix file (row indices represent 10Mb bins from chr1 to chrX, column names are cell barcodes).
 
-The model currently runs on CPU that allows for multiprocessing.
+The model currently runs on CPU that allows for multiprocessing. Processing speed is at about 1.2 seconds per cell on a single CPU core (Apple M1 Pro), which is about 5 times faster than the logistic regression model.
 
 ### Performance Comparison
 
-The performance of prediction measured by ROC curve is significantly improved by the neural network model
-on both our validation dataset (10% of our LC499/LC500 brain tumor dataset) and a separate dataset that represents colon cancer with distinct Hi-C pattern
-that is hard to distinguish from ecDNA:
-
-* **for validation dataset**:
+The performance of prediction of EGFR ecDNA measured by ROC curve is significantly improved by the neural network model
+on our validation dataset (10% of our LC499/LC500 brain tumor dataset):
 
 ![ROC1_NN.png](images%2FROC1_NN.png)
 
-* **for LC676/LC677 dataset**:
-
-![ROC2_NN.png](images%2FROC2_NN.png)
+When using our recommended probability cutoff of 0.2, the neural model achieves:
+* Sensitivity: 0.8581
+* Specificity: 0.9964
+* Precision: 0.9925
+* Accuracy: 0.9473
 
 ### Probability Cutoff Selection
 
@@ -205,13 +204,15 @@ a single cell (LC500_ACTAGGTGTTACCCAA) at different chromosomal bins (upper: log
 ![LC500_ACTAGGTGTTACCCAA_NN.png](images%2FLC500_ACTAGGTGTTACCCAA_NN.png)
 
 On our validation dataset, we tested how different probability cutoffs affect prediction of positive and negative samples.
-Figure below shows the difference between the true positive rate on positive samples and the false positive rate on negative samples under certain probability cutoff:
+Figure below shows the difference between the true positive rate **on positive samples** and the false positive rate **on negative samples** under certain probability cutoff:
 
 ![Delta.png](images%2FDelta.png)
 
-Ideally this value should be maximized. However, choosing 0.05 as the cutoff will result in more false positives,
+Ideally the Delta should be maximized. However, choosing 0.05 as the cutoff will result in more false positives,
 even though the true positive rate is at about 0.98 and the false positive rate is at about 0.02. 
-Thus, we generally recommend a cutoff of 0.1 to 0.3 for the neural network model, depending on the desired sensitivity.
+Thus, we generally recommend a cutoff of 0.1 to 0.3 for the neural model, depending on the desired sensitivity.
+**Currently, the most recommended cutoff is 0.2 for brain tumor samples.**
+
 Figures below demonstrates effect on the Manhattan plot by choosing different cutoff using a mixed positive-negative dataset:
 
 ![Rect_Manhtn.0.05.jpg](images%2FRect_Manhtn.0.05.jpg)
@@ -227,8 +228,6 @@ Figures below demonstrates effect on the Manhattan plot by choosing different cu
 ![Rect_Manhtn.0.40.jpg](images%2FRect_Manhtn.0.40.jpg)
 
 ![Rect_Manhtn.0.50.jpg](images%2FRect_Manhtn.0.50.jpg)
-
-Processing speed is at about 1.2 seconds per cell on a single CPU core (Apple M1 Pro), which is about 5 times faster than the logistic regression model.
 
 ## References
 
