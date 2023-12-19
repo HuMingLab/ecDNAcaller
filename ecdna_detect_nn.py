@@ -146,9 +146,6 @@ class CNN(nn.Module):
         self.dropout_fc = nn.Dropout(0.5)
 
     def forward(self, x2, coord):
-        # if self.training:
-        #    noise = zi_pois_noise(x2.shape, 1, 0.9999)  # test this
-        #    x2 = x2 + noise.float().to("mps")
 
         start_indices = coord - int((5 + 1) / 2) + 1
         end_indices = coord + int((5 + 1) / 2)
@@ -160,7 +157,7 @@ class CNN(nn.Module):
 
         gini = []
         for i in range(x2_c.shape[0]):
-            gini.append(torch.tensor(pygini.gini(x2_c[i, :].cpu().numpy()), dtype=torch.float32))
+            gini.append(torch.tensor(pygini.gini(x2_c[i, :].numpy()), dtype=torch.float32))
         gini = torch.unsqueeze(torch.stack(gini, dim=0), dim=-1)
 
         d4_slices = []
