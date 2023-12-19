@@ -213,7 +213,7 @@ even though the true positive rate is at about 0.98 and the false positive rate 
 Thus, we generally recommend a cutoff of 0.1 to 0.3 for the neural model, depending on the desired sensitivity.
 **Currently, the most recommended cutoff is 0.2 for brain tumor samples.**
 
-Figures below demonstrates effect on the Manhattan plot by choosing different cutoff using a mixed positive-negative dataset:
+Figures below demonstrates effect on the Manhattan plot by choosing different cutoff using a mixed dataset:
 
 ![Rect_Manhtn.0.05.jpg](images%2FRect_Manhtn.0.05.jpg)
 
