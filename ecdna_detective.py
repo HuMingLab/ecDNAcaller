@@ -79,11 +79,11 @@ def summarize(results, chr_index, sample_name, output_dir, prob_threshold):
     empty_rows = pd.DataFrame(0, columns=record.columns, index=range(2))
     record = pd.concat([empty_rows, record, empty_rows]).reset_index(drop=True)
 
-    record.to_csv(output_dir + "/ecDNA_predictions_" + sample_name + "_" + prob_threshold + ".txt", index=False,
+    record.to_csv(output_dir + "/ecDNA_prediction_" + sample_name + "_" + prob_threshold + ".txt", index=False,
                   sep="\t")
 
     freq = pd.DataFrame(
-        {"count": record.iloc[:, 2:].sum(axis=1), "freq": record.iloc[:, 2:].sum(axis=1) / record.iloc[:, 2:].shape[1]})
+        {"count": record.sum(axis=1), "freq": record.sum(axis=1) / record.shape[1]})
 
     freq = pd.concat([chr_index, freq], axis=1)
 

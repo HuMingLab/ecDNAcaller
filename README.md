@@ -168,7 +168,7 @@ We recently developed a neural network-based method that utilizes ideas from ima
 Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
 
 ```bash
-python ecdna_detect_nn.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
+python ecdna_detective.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
 ```
 The script will output a summary file (that can also be processed by `CMPlot.R` to generate a Manhattan plot) and a bin-barcode binary matrix file (row indices represent 10Mb bins from chr1 to chrX, column names are cell barcodes).
 
@@ -228,6 +228,8 @@ Figures below demonstrates effect on the Manhattan plot by choosing different cu
 ![Rect_Manhtn.0.40.jpg](images%2FRect_Manhtn.0.40.jpg)
 
 ![Rect_Manhtn.0.50.jpg](images%2FRect_Manhtn.0.50.jpg)
+
+Finally, to distinguish between ecDNA and homogeneously staining regions (HSRs), we recommend to use a cutoff of 0.99.
 
 ## References
 
