@@ -116,7 +116,7 @@ def summarize(results, chr_index, sample_name, output_dir, wsize):
 def process_file(model, chr_index, wsize, path):
     name = path.split("/")[-1]
 
-    print(name)
+    print("Processing ",name)
 
     try:
         mat = read_mtx(path + "/matrix.mtx", chr_index)
