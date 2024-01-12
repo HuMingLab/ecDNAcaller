@@ -116,7 +116,7 @@ def summarize(results, chr_index, sample_name, output_dir, wsize):
 def process_file(model, chr_index, wsize, path):
     name = path.split("/")[-1]
 
-    print("Processing ",name)
+    print("Processing",name)
 
     try:
         mat = read_mtx(path + "/matrix.mtx", chr_index)
@@ -209,7 +209,7 @@ model.eval()
 dir0 = sorted([input_dir + "/" + d for d in os.listdir(input_dir) if ".DS_Store" not in d])
 
 if __name__ == '__main__':
-    print(f'Processing {len(dir0)} cells...')
+    print(f'Found {len(dir0)} cells...')
 
     with Pool(processes=num_processes) as pool:
         func = partial(process_file, model, chr_index, wsize)
