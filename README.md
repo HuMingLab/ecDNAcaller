@@ -1,6 +1,6 @@
 # ecDNAfinder
 
-**Last updated: November 15, 2023**
+**Last updated: Jan. 12, 2024**
 
 ## Prerequisites
 
