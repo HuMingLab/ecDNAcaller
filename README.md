@@ -8,11 +8,11 @@
 
 * **GNU Parallel** (tested on 20230722)
 * **Python** (tested on 3.12.0)
-  * **pygini** (tested on 1.0.1)
-  * **pandas** (tested on 2.1.2)
-  * **numpy** (tested on 1.26.0)
+    * **pygini** (tested on 1.0.1)
+    * **pandas** (tested on 2.1.2)
+    * **numpy** (tested on 1.26.0)
 * **R** (tested on 4.3.2)
-  * **CMplot** (tested on 4.4.3)
+    * **CMplot** (tested on 4.4.3)
 * (other packages required as dependencies)
 
 ### Data
@@ -21,7 +21,9 @@
 * **Single-cell Hi-C contact matrices**
 * **Trained logistic regression model**
 
-Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAfinder` script. Modify the section below if needed:
+Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAfinder` script. Modify
+the section below if needed:
+
 ```
 ####################
 cnv_name="1000000.CNV.bedGraph"
@@ -33,10 +35,12 @@ lm_dir=$script_dir"/coef_model_brain.txt"
 ## Installation
 
 We recommend to run `ecDNAfinder` in a conda/mamba environment.
+
 ```bash
 conda create -n ecDNAfinder python parallel pandas numpy
 pip install pygini
 ```
+
 Then clone this repository to a local directory.
 
 ## Test Run
@@ -44,13 +48,18 @@ Then clone this repository to a local directory.
 1. Download the example data, LC675 brain tumor dataset, and extract to a local directory.
 
 2. Run command below (modify `-t` according to the number of threads available):
+
 ```bash
 sh ecDNAfinder -i example_data -o example_out -p 0.95 -t 32
 ```
-3. Find the `example_data_count_freq.txt` in directory `example_out/ecDNA_summary_example_data_0.95`  and modify the following line with the actual path in `CMPlot.R`:
+
+3. Find the `example_data_count_freq.txt` in directory `example_out/ecDNA_summary_example_data_0.95`  and modify the
+   following line with the actual path in `CMPlot.R`:
+
 ```R
 count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
 ```
+
 4. Then run `CMPlot.R` in interactive mode and generate a plot. The Manhattan plot should look like this:
    ![](https://github.com/Enterprise-D/ecDNAfinder/blob/main/Rect_Manhtn.LC675.jpg)
 
@@ -74,7 +83,8 @@ sh ecDNAfinder -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <T
 
 `-t` number of threads. Must be an integer.
 
-`-s` (optional) summary-only mode. Use `-s true` to skip redundant cell processing (for example, if you need to change the probability cutoff threshold and re-summarize).
+`-s` (optional) summary-only mode. Use `-s true` to skip redundant cell processing (for example, if you need to change
+the probability cutoff threshold and re-summarize).
 
 Note: current version will ignore all interactions that involve chromosome Y (`'chrY'`).
 
@@ -95,19 +105,22 @@ example_data_cnv.txt         example_data_pred.txt
 example_data_count_freq.txt  example_data_ratio.txt
 example_data_gini.txt
 ```
+
 Seek `example_data_pred.txt` for the final prediction result.
 
 Seek `example_data_count_freq.txt` for the contact frequency information summary.
 
 ### 2. Manhattan plot
 
-Note: please run `CMPlot.R` in interactive mode for flexibility. modify variable assignment `count_freq_file` to read count frequency file.
+Note: please run `CMPlot.R` in interactive mode for flexibility. modify variable assignment `count_freq_file` to read
+count frequency file.
 
 ## Appendix
 
 ### 1. Directory hierarchy requirements
 
 **Minimal requirements:**
+
 ```
 > ls -R example_data
 
@@ -122,6 +135,7 @@ example_data/LC675_AAACGAAAGGGTTCTT:
 ### 2. File format requirements
 
 #### 2.1 Single-cell copy number variation data
+
 ```
 > head 1000000.CNV.bedGraph
 
@@ -138,12 +152,15 @@ chr1	9000000	10000000	1.4120115495979793
 ```
 
 Note: `_process.py` will add column names as:
+
 ```
 'chr', 'start', 'end', 'cnv'
 ```
+
 Thus, the columns must correspond.
 
 #### 2.1 Single-cell copy Hi-C contact matrices
+
 ```
 > head matrix.mtx
 
@@ -161,88 +178,52 @@ chr1	1000000	2000000	chr20	61000000	62000000	1
 
 ## Alternative Method
 
-We recently developed a neural network-based method that utilizes ideas from image classification as well as logistic regression above to achieve a more specific and efficient ecDNA detection.
+We recently developed a deep learning-based method that utilizes ideas from image classification as well as logistic
+regression model above to achieve a more specific and efficient ecDNA/HSR detection.
 
 ### Usage
 
 Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
 
 ```bash
-python ecdna_detective.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
+python ecdna_distinguisher.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
 ```
-The script will output a summary file (that can also be processed by `CMPlot.R` to generate a Manhattan plot) and a bin-barcode binary matrix file (row indices represent 10Mb bins from chr1 to chrX, column names are cell barcodes).
 
-The model currently runs on CPU that allows for multiprocessing. Processing speed is at about 1.2 seconds per cell on a single CPU core (Apple M1 Pro), which is about 5 times faster than the logistic regression model.
+The script will output three summary files for 1) ecDNA alone, 2) HSR alone and 3) all together (that can also be
+processed by `CMPlot.R` to generate a Manhattan plot) and a
+bin-barcode binary matrix file in which row indices represent 10Mb bins from chr1 to chrX and column names are cell barcodes.
+
+In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design, the first 2 bins
+of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
+
+The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
+a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
 
 ### Performance Comparison
-
-The performance of prediction of EGFR ecDNA measured by ROC curve is significantly improved by the neural network model
-on our validation dataset (10% of our LC499/LC500 brain tumor dataset):
-
-![ROC1_NN.png](images%2FROC1_NN.png)
-
-When using our recommended probability cutoff of 0.2, the neural model achieves:
-* Sensitivity: 0.8581
-* Specificity: 0.9964
-* Precision: 0.9925
-* Accuracy: 0.9473
-
-### Probability Cutoff Selection
-
-Probability cutoff selection is a trade-off between sensitivity and specificity. 
-For logistic regression, we chose 0.95 for minimized false positive rate. 
-However, our current neural network model tends to reject more uncertain ecDNA candidates 
-and pushes their predicted probability to a small number. Below is a comparison of the predicted probability on
-a single cell (LC500_ACTAGGTGTTACCCAA) at different chromosomal bins (upper: logistic regression; lower: neural network):
-
-* **linear model**:
-
-![LC500_ACTAGGTGTTACCCAA_LM.png](images%2FLC500_ACTAGGTGTTACCCAA_LM.png)
-
-* **neural model**:
-
-![LC500_ACTAGGTGTTACCCAA_NN.png](images%2FLC500_ACTAGGTGTTACCCAA_NN.png)
-
-On our validation dataset, we tested how different probability cutoffs affect prediction of positive and negative samples.
-Figure below shows the difference between the true positive rate **on positive samples** and the false positive rate **on negative samples** under certain probability cutoff:
-
-![Delta.png](images%2FDelta.png)
-
-Ideally the Delta should be maximized. However, choosing 0.05 as the cutoff will result in more false positives,
-even though the true positive rate is at about 0.98 and the false positive rate is at about 0.02. 
-Thus, we generally recommend a cutoff of 0.1 to 0.3 for the neural model, depending on the desired sensitivity.
-**Currently, the most recommended cutoff is 0.2 for brain tumor samples.**
-
-Figures below demonstrates effect on the Manhattan plot by choosing different cutoff using a mixed dataset:
-
-![Rect_Manhtn.0.05.jpg](images%2FRect_Manhtn.0.05.jpg)
-
-![Rect_Manhtn.0.10.jpg](images%2FRect_Manhtn.0.10.jpg)
-
-![Rect_Manhtn.0.15.jpg](images%2FRect_Manhtn.0.15.jpg)
-
-![Rect_Manhtn.0.20.jpg](images%2FRect_Manhtn.0.20.jpg)
-
-![Rect_Manhtn.0.30.jpg](images%2FRect_Manhtn.0.30.jpg)
-
-![Rect_Manhtn.0.40.jpg](images%2FRect_Manhtn.0.40.jpg)
-
-![Rect_Manhtn.0.50.jpg](images%2FRect_Manhtn.0.50.jpg)
-
-Finally, to distinguish between ecDNA and homogeneously staining regions (HSRs), we recommend to use a cutoff of 0.99.
 
 ## References
 
 * O. Tange (2011): GNU Parallel - The Command-Line Power Tool, The USENIX Magazine, February 2011:42-47.
-* Yin, L. et al. rMVP: A Memory-efficient, Visualization-enhanced, and Parallel-accelerated tool for Genome-Wide Association Study, Genomics, Proteomics & Bioinformatics (2021), doi: 10.1016/j.gpb.2020.10.007.
+* Yin, L. et al. rMVP: A Memory-efficient, Visualization-enhanced, and Parallel-accelerated tool for Genome-Wide
+  Association Study, Genomics, Proteomics & Bioinformatics (2021), doi: 10.1016/j.gpb.2020.10.007.
 * The pandas development team (2020). pandas-dev/pandas: Pandas (Version latest). doi:10.5281/zenodo.3509134.
-* Harris, C.R., Millman, K.J., van der Walt, S.J. et al. Array programming with NumPy. Nature 585, 357–362 (2020). DOI: 10.1038/s41586-020-2649-2.
+* Harris, C.R., Millman, K.J., van der Walt, S.J. et al. Array programming with NumPy. Nature 585, 357–362 (2020). DOI:
+  10.1038/s41586-020-2649-2.
 * mckib2. (n.d.). Mckib2/Pygini: Compute the gini index. GitHub. https://github.com/mckib2/pygini
 
 #### For alternative method:
 
-* Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zach DeVito, Martin Raison, Alykhan Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. 2019. PyTorch: an imperative style, high-performance deep learning library. Proceedings of the 33rd International Conference on Neural Information Processing Systems. Curran Associates Inc., Red Hook, NY, USA, Article 721, 8026–8037.
-* Pauli Virtanen, Ralf Gommers, Travis E. Oliphant, Matt Haberland, Tyler Reddy, David Cournapeau, Evgeni Burovski, Pearu Peterson, Warren Weckesser, Jonathan Bright, Stéfan J. van der Walt, Matthew Brett, Joshua Wilson, K. Jarrod Millman, Nikolay Mayorov, Andrew R. J. Nelson, Eric Jones, Robert Kern, Eric Larson, CJ Carey, İlhan Polat, Yu Feng, Eric W. Moore, Jake VanderPlas, Denis Laxalde, Josef Perktold, Robert Cimrman, Ian Henriksen, E.A. Quintero, Charles R Harris, Anne M. Archibald, Antônio H. Ribeiro, Fabian Pedregosa, Paul van Mulbregt, and SciPy 1.0 Contributors. (2020) SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python. Nature Methods, 17(3), 261-272.
+* Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin,
+  Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zach DeVito, Martin Raison, Alykhan
+  Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. 2019. PyTorch: an imperative
+  style, high-performance deep learning library. Proceedings of the 33rd International Conference on Neural Information
+  Processing Systems. Curran Associates Inc., Red Hook, NY, USA, Article 721, 8026–8037.
+* Pauli Virtanen, Ralf Gommers, Travis E. Oliphant, Matt Haberland, Tyler Reddy, David Cournapeau, Evgeni Burovski,
+  Pearu Peterson, Warren Weckesser, Jonathan Bright, Stéfan J. van der Walt, Matthew Brett, Joshua Wilson, K. Jarrod
+  Millman, Nikolay Mayorov, Andrew R. J. Nelson, Eric Jones, Robert Kern, Eric Larson, CJ Carey, İlhan Polat, Yu Feng,
+  Eric W. Moore, Jake VanderPlas, Denis Laxalde, Josef Perktold, Robert Cimrman, Ian Henriksen, E.A. Quintero, Charles R
+  Harris, Anne M. Archibald, Antônio H. Ribeiro, Fabian Pedregosa, Paul van Mulbregt, and SciPy 1.0 Contributors. (2020)
+  SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python. Nature Methods, 17(3), 261-272.
 
 ## Contact Us
 
