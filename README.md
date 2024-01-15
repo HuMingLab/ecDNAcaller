@@ -158,7 +158,7 @@ a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the
 
 Note: to reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to
 enable DEV mode, such as `32d`.
-This will make the model ignore cells without a valid CNV file. Thus,
+This will make the model ignore cells with a valid contact matrix file but without a valid CNV file. Thus,
 the validation of this deep learning-based model will be based
 on the exactly same set of cells as the logistic regression-based model.
 This is because CNV files are mandatory for the logistic regression-based model, but not required for the deep
