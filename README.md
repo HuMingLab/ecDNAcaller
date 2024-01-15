@@ -156,8 +156,9 @@ of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
 The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
 a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
 
-Note: to reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to enable DEV mode, such as `32d`.
-This will make the model ignore cells without CNV file, thus,
+Note: to reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to
+enable DEV mode, such as `32d`.
+This will make the model ignore cells without a valid CNV file. Thus,
 the validation of this deep learning-based model will be based
 on the exactly same set of cells as the logistic regression-based model.
 This is because CNV files are mandatory for the logistic regression-based model, but not required for the deep
