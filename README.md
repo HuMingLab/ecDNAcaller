@@ -6,20 +6,21 @@
 
 ### Packages
 
-* **GNU Parallel** (tested on 20230722)
-* **Python** (tested on 3.12.0)
-    * **pygini** (tested on 1.0.1)
-    * **pandas** (tested on 2.1.2)
-    * **numpy** (tested on 1.26.0)
-* **R** (tested on 4.3.2)
-    * **CMplot** (tested on 4.4.3)
+* **GNU Parallel**
+* **Python**
+    * **pygini**
+    * **pandas**
+    * **numpy**
+    * **PyTorch** (for deep learning-based model only)
+    * **scipy** (for deep learning-based model only)
+* **R**
+    * **CMplot**
 * (other packages required as dependencies)
 
 ### Data
 
-* **Copy number variation data**
+* **Copy number variation data** (for logistic regression-based model only)
 * **Single-cell Hi-C contact matrices**
-* **Trained logistic regression model**
 
 Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAcaller` script. Modify
 the section below if needed:
@@ -34,7 +35,7 @@ lm_dir=$script_dir"/coef_model_brain.txt"
 
 ## Installation
 
-We recommend to run `ecDNAcaller` in a conda/mamba environment.
+We recommend to run `ecDNAcaller` and `ecDNAcaller_deep.py` in a conda/mamba environment.
 
 ```bash
 conda create -n ecDNAcaller python parallel pandas numpy
@@ -110,7 +111,29 @@ Seek `example_data_pred.txt` for the final prediction result.
 
 Seek `example_data_count_freq.txt` for the contact frequency information summary.
 
-### 2. Manhattan plot
+### 2. ecDNAcaller_deep.py
+
+We developed a deep learning-based method that utilizes combined ideas from image classification as well as logistic
+regression model above to achieve a more specific and efficient ecDNA/HSR detection.
+
+With the same directory hierarchy, this deep learning-based model only requires
+`matrix.mtx` for each cell as input.
+
+```bash
+python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
+```
+
+The script will output three summary files to the designated directory for 1) ecDNA alone, 2) HSR alone and 3) all together (that can also be
+processed by `CMPlot.R` to generate a Manhattan plot) and a
+bin-barcode binary matrix file in which row indices represent 10Mb bins from chr1 to chrX and column names are cell barcodes.
+
+In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design, the first 2 bins
+of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
+
+The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
+a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
+
+### 3. Manhattan plot
 
 Note: please run `CMPlot.R` in interactive mode for flexibility. modify variable assignment `count_freq_file` to read
 count frequency file.
@@ -175,31 +198,6 @@ chr1	1000000	2000000	chr19	24000000	25000000	1
 chr1	1000000	2000000	chr20	3000000	4000000	1
 chr1	1000000	2000000	chr20	61000000	62000000	1
 ```
-
-## Deep Learning-based ecDNA/HSR Detection
-
-We developed a deep learning-based method that utilizes combined ideas from image classification as well as logistic
-regression model above to achieve a more specific and efficient ecDNA/HSR detection.
-
-### Usage
-
-With the same directory hierarchy, this deep learning-based model only requires
-`matrix.mtx` for each cell as input. Before running the script, please have
-**PyTorch** and **scipy** installed in addition to the packages listed above.
-
-```bash
-python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
-```
-
-The script will output three summary files for 1) ecDNA alone, 2) HSR alone and 3) all together (that can also be
-processed by `CMPlot.R` to generate a Manhattan plot) and a
-bin-barcode binary matrix file in which row indices represent 10Mb bins from chr1 to chrX and column names are cell barcodes.
-
-In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design, the first 2 bins
-of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
-
-The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
-a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
 
 ## References
 
