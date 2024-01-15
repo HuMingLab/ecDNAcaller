@@ -22,14 +22,24 @@
 * **Copy number variation data** (for logistic regression-based model only)
 * **Single-cell Hi-C contact matrices**
 
-Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAcaller` script. Modify
+Note: see **File format requirements** for examples. File names are currently hard-coded. Modify
 the section below if needed:
 
+#### For logistic regression-based model:
+
+In `ecDNAcaller`:
 ```
 ####################
 cnv_name="1000000.CNV.bedGraph"
 mat_name="matrix.mtx"
 lm_dir=$script_dir"/coef_model_brain.txt"
+####################
+```
+
+In `ecDNAcaller_deep.py`:
+```
+####################
+mat_name = "matrix.mtx"
 ####################
 ```
 

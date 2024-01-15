@@ -22,6 +22,10 @@ sample_name = input_dir.split("/")[-1]
 
 chr_index = pd.read_csv("index.csv", header=0)
 
+####################
+mat_name = "matrix.mtx"
+####################
+
 wsize = 5
 msize = 3044
 
@@ -119,7 +123,7 @@ def process_file(model, chr_index, wsize, path):
     print("Processing",name)
 
     try:
-        mat = read_mtx(path + "/matrix.mtx", chr_index)
+        mat = read_mtx(path + "/" + mat_name, chr_index)
     except:
         print("Error reading mtx file.")
         return
