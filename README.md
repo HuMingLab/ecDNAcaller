@@ -48,21 +48,25 @@ Then clone this repository to a local directory.
 
 1. Download the example data, LC675 brain tumor dataset, and extract to a local directory.
 
-2. Run command below (modify `-t` according to the number of threads available):
+2. Run command below (modify `-t` of `ecDNAcaller` and the last parameter of `ecDNAcaller_deep.py` according to the number of threads available):
 
 ```bash
-sh ecDNAcaller -i example_data -o example_out -p 0.95 -t 32
+sh ecDNAcaller -i example_data -o example_out_1 -p 0.95 -t 32
+
+python ecDNAcaller_deep.py example_data example_out_2 32
 ```
 
-3. Find the `example_data_count_freq.txt` in directory `example_out/ecDNA_summary_example_data_0.95`  and modify the
-   following line with the actual path in `CMPlot.R`:
+3. Find the `example_data_count_freq.txt` in directory `example_out_1/ecDNA_summary_example_data_0.95` 
+
+4. `example_data_summary_all.txt`, `example_data_summary_ecDNA.txt` and `example_data_summary_HSR.txt` in directory `example_out_2`.
+
+5. Modify the following line with the actual path of files above in `CMPlot.R`:
 
 ```R
 count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
 ```
 
-4. Then run `CMPlot.R` in interactive mode and generate a plot. The Manhattan plot should look like this:
-   ![](https://github.com/Enterprise-D/ecDNAfinder/blob/main/Rect_Manhtn.LC675.jpg)
+6. Then run `CMPlot.R` in interactive mode and generate plots.
 
 ## Usage
 
@@ -120,7 +124,7 @@ With the same directory hierarchy, this deep learning-based model only requires
 `matrix.mtx` for each cell as input.
 
 ```bash
-python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
+python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <NUM_PROCESSES>
 ```
 
 The script will output three summary files to the designated directory for 1) ecDNA alone, 2) HSR alone and 3) all together (that can also be
