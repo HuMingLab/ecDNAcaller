@@ -176,9 +176,9 @@ chr1	1000000	2000000	chr20	3000000	4000000	1
 chr1	1000000	2000000	chr20	61000000	62000000	1
 ```
 
-## Alternative Method
+## Deep Learning-based ecDNA/HSR Detection
 
-We recently developed a deep learning-based method that utilizes ideas from image classification as well as logistic
+We developed a deep learning-based method that utilizes ideas from image classification as well as logistic
 regression model above to achieve a more specific and efficient ecDNA/HSR detection.
 
 ### Usage
@@ -199,8 +199,6 @@ of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
 The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
 a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
 
-### Performance Comparison
-
 ## References
 
 * O. Tange (2011): GNU Parallel - The Command-Line Power Tool, The USENIX Magazine, February 2011:42-47.
@@ -211,7 +209,7 @@ a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the
   10.1038/s41586-020-2649-2.
 * mckib2. (n.d.). Mckib2/Pygini: Compute the gini index. GitHub. https://github.com/mckib2/pygini
 
-#### For alternative method:
+#### For deep learning-based model:
 
 * Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin,
   Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zach DeVito, Martin Raison, Alykhan
