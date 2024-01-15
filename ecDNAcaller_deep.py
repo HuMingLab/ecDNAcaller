@@ -20,7 +20,6 @@ output_dir = sys.argv[2].rstrip('/')
 num_processes = int(sys.argv[3].rstrip('d'))
 
 if sys.argv[3].endswith('d'):
-    print("DEV_MODE: Ignore cells without readable CNV file.")
     dev_mode = True
 else:
     dev_mode = False
@@ -225,6 +224,9 @@ model.eval()
 dir0 = sorted([input_dir + "/" + d for d in os.listdir(input_dir) if ".DS_Store" not in d])
 
 if __name__ == '__main__':
+    if dev_mode:
+        print("DEV_MODE: Ignore cells without readable CNV file.")
+
     print(f'Found {len(dir0)} cells...')
 
     with Pool(processes=num_processes) as pool:
