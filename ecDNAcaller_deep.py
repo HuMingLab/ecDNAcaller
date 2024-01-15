@@ -17,7 +17,14 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 input_dir = sys.argv[1].rstrip('/')
 output_dir = sys.argv[2].rstrip('/')
-num_processes = int(sys.argv[3])
+num_processes = int(sys.argv[3].rstrip('d'))
+
+if sys.argv[3].endswith('d'):
+    print("DEV_MODE: Ignore cells without readable CNV file.")
+    dev_mode = True
+else:
+    dev_mode = False
+
 sample_name = input_dir.split("/")[-1]
 
 chr_index = pd.read_csv("index.csv", header=0)
@@ -120,7 +127,7 @@ def summarize(results, chr_index, sample_name, output_dir, wsize):
 def process_file(model, chr_index, wsize, path):
     name = path.split("/")[-1]
 
-    print("Processing",name)
+    print("Processing", name)
 
     try:
         mat = read_mtx(path + "/" + mat_name, chr_index)
@@ -131,6 +138,11 @@ def process_file(model, chr_index, wsize, path):
     if not mat.shape == (msize, msize):
         print("Matrix shape mismatch.")
         return
+
+    if dev_mode:
+        if not os.path.exists(path + "/1000000.CNV.bedGraph"):
+            print("DEV_MODE: CNV file not found.")
+            return
 
     test_tensor, centers = slide(torch.from_numpy(mat), wsize, wsize)
 

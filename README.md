@@ -62,7 +62,8 @@ Then clone this repository to a local directory.
 
 1. Download the example data, LC675 brain tumor dataset, and extract to a local directory.
 
-2. Run command below (modify `-t` of `ecDNAcaller` and the last parameter of `ecDNAcaller_deep.py` according to the number of threads available):
+2. Run command below (modify `-t` of `ecDNAcaller` and the last parameter of `ecDNAcaller_deep.py` according to the
+   number of threads available):
 
 ```bash
 sh ecDNAcaller -i example_data -o example_out_1 -p 0.95 -t 32
@@ -70,9 +71,10 @@ sh ecDNAcaller -i example_data -o example_out_1 -p 0.95 -t 32
 python ecDNAcaller_deep.py example_data example_out_2 32
 ```
 
-3. Find `example_data_count_freq.txt` in directory `example_out_1/ecDNA_summary_example_data_0.95` 
+3. Find `example_data_count_freq.txt` in directory `example_out_1/ecDNA_summary_example_data_0.95`
 
-4. Find `example_data_summary_all.txt`, `example_data_summary_ecDNA.txt` and `example_data_summary_HSR.txt` in directory `example_out_2`.
+4. Find `example_data_summary_all.txt`, `example_data_summary_ecDNA.txt` and `example_data_summary_HSR.txt` in
+   directory `example_out_2`.
 
 5. Modify the following line with the actual path of files above in `CMPlot.R`:
 
@@ -141,15 +143,28 @@ With the same directory hierarchy, this deep learning-based model only requires
 python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <NUM_PROCESSES>
 ```
 
-The script will output three summary files to the designated directory for 1) ecDNA alone, 2) HSR alone and 3) all together (that can also be
+The script will output three summary files to the designated directory for 1) ecDNA alone, 2) HSR alone and 3) all
+together (that can also be
 processed by `CMPlot.R` to generate a Manhattan plot) and a
-bin-barcode binary matrix file in which row indices represent 10Mb bins from chr1 to chrX and column names are cell barcodes.
+bin-barcode binary matrix file in which row indices represent 10Mb bins from chr1 to chrX and column names are cell
+barcodes.
 
-In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design, the first 2 bins
+In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design, the first
+2 bins
 of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
 
 The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
 a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
+
+Note: to exactly reproduce the results in the paper, please add a `d` at the end the last parameter to enable DEV mode
+without a space, such as `32d`.
+This will make the model ignore cells without CNV file, thus,
+the validation of this deep learning-based model will be based
+on the exactly same set of cells as the logistic regression-based model.
+This is because CNV files are mandatory for the logistic regression-based model, but not required for the deep
+learning-based model.
+If DEV mode is disabled, the model will process all cells that have a readable count matrix file, which will result in a
+slightly different, but more accurate result.
 
 ### 3. Manhattan plot
 
