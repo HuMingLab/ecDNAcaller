@@ -52,7 +52,10 @@ mat_name = "matrix.mtx"
 We recommend to run `ecDNAcaller` and `ecDNAcaller_deep.py` in a conda/mamba environment.
 
 ```bash
-conda create -n ecDNAcaller python parallel pandas numpy
+conda create -n ecDNAcaller python parallel pandas numpy PyTorch scipy
+
+conda activate ecDNAcaller
+
 pip install pygini
 ```
 
@@ -60,7 +63,7 @@ Then clone this repository to a local directory.
 
 ## Test Run
 
-1. Download the example data, LC675 brain tumor dataset, and extract to a local directory.
+1. Download the example data (LC675 brain tumor dataset) and extract to a local directory.
 
 2. Run command below (modify `-t` of `ecDNAcaller` and the last parameter of `ecDNAcaller_deep.py` according to the
    number of threads available):
@@ -147,11 +150,8 @@ The script will output three summary files to the designated directory for 1) ec
 together (that can also be
 processed by `CMPlot.R` to generate a Manhattan plot) and a
 bin-barcode binary matrix file in which row indices represent 10Mb bins from chr1 to chrX and column names are cell
-barcodes.
-
-In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design, the first
-2 bins
-of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
+barcodes. In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design,
+the first 2 bins of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
 
 The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
 a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
