@@ -28,6 +28,7 @@ the section below if needed:
 #### For logistic regression-based model:
 
 In `ecDNAcaller`:
+
 ```
 ####################
 cnv_name="1000000.CNV.bedGraph"
@@ -36,7 +37,10 @@ lm_dir=$script_dir"/coef_model_brain.txt"
 ####################
 ```
 
+#### For deep learning-based model:
+
 In `ecDNAcaller_deep.py`:
+
 ```
 ####################
 mat_name = "matrix.mtx"
