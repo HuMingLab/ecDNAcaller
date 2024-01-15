@@ -1,6 +1,6 @@
 # ecDNAcaller
 
-**Last updated: Jan. 12, 2024**
+**Last updated: Jan. 15, 2024**
 
 ## Prerequisites
 
