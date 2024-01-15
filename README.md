@@ -163,7 +163,7 @@ the validation of this deep learning-based model will be based
 on the exactly same set of cells as the logistic regression-based model.
 This is because CNV files are mandatory for the logistic regression-based model, but not required for the deep
 learning-based model.
-If DEV mode is disabled, the model will process all cells that have a readable count matrix file, which may (but not essentially) result in a
+If DEV mode is disabled, the model will process all cells that have a readable contact matrix file, which may (but not essentially) result in a
 slightly different, but more accurate result.
 
 ### 3. Manhattan plot
