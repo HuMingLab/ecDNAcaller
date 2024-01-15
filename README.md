@@ -178,12 +178,14 @@ chr1	1000000	2000000	chr20	61000000	62000000	1
 
 ## Deep Learning-based ecDNA/HSR Detection
 
-We developed a deep learning-based method that utilizes ideas from image classification as well as logistic
+We developed a deep learning-based method that utilizes combined ideas from image classification as well as logistic
 regression model above to achieve a more specific and efficient ecDNA/HSR detection.
 
 ### Usage
 
-Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
+With the same directory hierarchy, this deep learning-based model only requires
+`matrix.mtx` for each cell as input. Before running the script, please have
+**PyTorch** and **scipy** installed in addition to the packages listed above.
 
 ```bash
 python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
