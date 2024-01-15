@@ -1,4 +1,4 @@
-# ecDNAfinder
+# ecDNAcaller
 
 **Last updated: Jan. 12, 2024**
 
@@ -21,7 +21,7 @@
 * **Single-cell Hi-C contact matrices**
 * **Trained logistic regression model**
 
-Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAfinder` script. Modify
+Note: see **File format requirements** for examples. File names are currently hard-coded in `ecDNAcaller` script. Modify
 the section below if needed:
 
 ```
@@ -34,10 +34,10 @@ lm_dir=$script_dir"/coef_model_brain.txt"
 
 ## Installation
 
-We recommend to run `ecDNAfinder` in a conda/mamba environment.
+We recommend to run `ecDNAcaller` in a conda/mamba environment.
 
 ```bash
-conda create -n ecDNAfinder python parallel pandas numpy
+conda create -n ecDNAcaller python parallel pandas numpy
 pip install pygini
 ```
 
@@ -50,7 +50,7 @@ Then clone this repository to a local directory.
 2. Run command below (modify `-t` according to the number of threads available):
 
 ```bash
-sh ecDNAfinder -i example_data -o example_out -p 0.95 -t 32
+sh ecDNAcaller -i example_data -o example_out -p 0.95 -t 32
 ```
 
 3. Find the `example_data_count_freq.txt` in directory `example_out/ecDNA_summary_example_data_0.95`  and modify the
@@ -65,12 +65,12 @@ count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_coun
 
 ## Usage
 
-### 1. ecDNAfinder
+### 1. ecDNAcaller
 
 ```bash
-sh ecDNAfinder -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <THREADS>
+sh ecDNAcaller -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <THREADS>
 
-sh ecDNAfinder -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <THREADS> -s <BOOLEAN_OPTION>
+sh ecDNAcaller -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <THREADS> -s <BOOLEAN_OPTION>
 ```
 
 **Arguments:**
@@ -186,7 +186,7 @@ regression model above to achieve a more specific and efficient ecDNA/HSR detect
 Before running the script, please have **PyTorch** and **scipy** installed in addition to the packages listed above.
 
 ```bash
-python ecdna_distinguisher.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
+python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <PROB_CUTOFF> <NUM_PROCESSES>
 ```
 
 The script will output three summary files for 1) ecDNA alone, 2) HSR alone and 3) all together (that can also be
