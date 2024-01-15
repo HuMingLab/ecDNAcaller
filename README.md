@@ -70,9 +70,9 @@ sh ecDNAcaller -i example_data -o example_out_1 -p 0.95 -t 32
 python ecDNAcaller_deep.py example_data example_out_2 32
 ```
 
-3. Find the `example_data_count_freq.txt` in directory `example_out_1/ecDNA_summary_example_data_0.95` 
+3. Find `example_data_count_freq.txt` in directory `example_out_1/ecDNA_summary_example_data_0.95` 
 
-4. `example_data_summary_all.txt`, `example_data_summary_ecDNA.txt` and `example_data_summary_HSR.txt` in directory `example_out_2`.
+4. Find `example_data_summary_all.txt`, `example_data_summary_ecDNA.txt` and `example_data_summary_HSR.txt` in directory `example_out_2`.
 
 5. Modify the following line with the actual path of files above in `CMPlot.R`:
 
@@ -226,9 +226,6 @@ chr1	1000000	2000000	chr20	61000000	62000000	1
 * Harris, C.R., Millman, K.J., van der Walt, S.J. et al. Array programming with NumPy. Nature 585, 357–362 (2020). DOI:
   10.1038/s41586-020-2649-2.
 * mckib2. (n.d.). Mckib2/Pygini: Compute the gini index. GitHub. https://github.com/mckib2/pygini
-
-#### For deep learning-based model:
-
 * Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin,
   Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zach DeVito, Martin Raison, Alykhan
   Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. 2019. PyTorch: an imperative
