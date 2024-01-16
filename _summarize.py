@@ -9,27 +9,27 @@ output_dir = sys.argv[2].rstrip('/')
 prob_cutoff = sys.argv[3]
 
 sample_name = input_dir.split('/')[-1]
-prediction_dir = output_dir + "/" + "ecDNA_prediction_" + sample_name
-summary_dir = output_dir + "/" + "ecDNA_summary_" + sample_name + '_' + prob_cutoff
+cache_dir = output_dir + "/" + sample_name + "_cache"
+summary_dir = output_dir + "/" + sample_name + "_summary_" + prob_cutoff + "_prob"
 
 print("Sample", sample_name, "| Summarizing ecDNA...")
 
 # %%
 
-prediction_file_list = sorted(os.listdir(prediction_dir))
-prediction_file_list = [file for file in prediction_file_list if not file.lower().endswith('.ds_store')]
+cache_file_list = sorted(os.listdir(cache_dir))
+cache_file_list = [file for file in cache_file_list if not file.lower().endswith('.ds_store')]
 
 cell_file_list = sorted(os.listdir(input_dir))
 cell_file_list = [file for file in cell_file_list if not file.lower().endswith('.ds_store')]  # for macOS compatibility
 
 # %%
 
-a = pd.read_table(prediction_dir + "/" + prediction_file_list[0], header=0)
+a = pd.read_table(cache_dir + "/" + cache_file_list[0], header=0)
 coord = a.iloc[:, 0:3]
 
 # %%
 
-file_paths = [os.path.join(prediction_dir, cell) for cell in prediction_file_list]
+file_paths = [os.path.join(cache_dir, cell) for cell in cache_file_list]
 
 dfs = [pd.read_table(file_path, header=0) for file_path in file_paths]
 
@@ -40,10 +40,10 @@ m_ratio = all_data[['log2ratio']]
 m_gini = all_data[['gini']]
 m_pred = all_data[['pred']]
 
-m_cnv.columns = prediction_file_list
-m_ratio.columns = prediction_file_list
-m_gini.columns = prediction_file_list
-m_pred.columns = prediction_file_list
+m_cnv.columns = cache_file_list
+m_ratio.columns = cache_file_list
+m_gini.columns = cache_file_list
+m_pred.columns = cache_file_list
 
 # %%
 
@@ -74,11 +74,11 @@ final_count_freq = pd.concat([coord, count, freq], axis=1)
 final_count_freq.columns = ['chr', 'start', 'end', 'count', 'freq']
 
 try:
-    final_cnv.to_csv(f'{summary_dir}/{sample_name}_cnv.txt', sep='\t', index=False)
-    final_ratio.to_csv(f'{summary_dir}/{sample_name}_ratio.txt', sep='\t', index=False)
-    final_gini.to_csv(f'{summary_dir}/{sample_name}_gini.txt', sep='\t', index=False)
-    final_pred.to_csv(f'{summary_dir}/{sample_name}_pred.txt', sep='\t', index=False)
-    final_count_freq.to_csv(f'{summary_dir}/{sample_name}_count_freq.txt', sep='\t', index=False)
+    final_cnv.to_csv(f'{summary_dir}/bin_barcode_matrix_cnv.txt', sep='\t', index=False)
+    final_ratio.to_csv(f'{summary_dir}/bin_barcode_matrix_ratio.txt', sep='\t', index=False)
+    final_gini.to_csv(f'{summary_dir}/bin_barcode_matrix_gini.txt', sep='\t', index=False)
+    final_pred.to_csv(f'{summary_dir}/bin_barcode_matrix_pred.txt', sep='\t', index=False)
+    final_count_freq.to_csv(f'{summary_dir}/{sample_name}_count_freq_ecDNA.txt', sep='\t', index=False)
 
 except KeyboardInterrupt:
     print("Sample", sample_name, "| File writing interrupted.")

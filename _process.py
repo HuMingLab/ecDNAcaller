@@ -29,8 +29,8 @@ sample_name = input_dir.split('/')[-1]
 path_bed_graph = cell_dir + "/" + cnv_name
 path_contact_matrix = cell_dir + "/" + mat_name
 
-prediction_dir = output_dir + "/" + "ecDNA_prediction_" + sample_name
-output_file_path = prediction_dir + '/' + cell_name + '.txt'
+cache_dir = output_dir + "/" + sample_name + "_cache"
+output_file_path = cache_dir + '/' + cell_name + '.txt'
 
 if (not os.path.exists(path_bed_graph)) or (not os.path.exists(path_contact_matrix)):
     print("Cell", cell_name, "| Error: One or more file(s) not exist.")
@@ -105,6 +105,7 @@ res['pred'] = 1 / (1 + np.exp(-res['eta']))
 res.loc[res['gini'].isna(), 'pred'] = 0
 
 # %%
+
 try:
     res.to_csv(output_file_path, sep='\t', index=False, header=True, quoting=0)
 except KeyboardInterrupt:

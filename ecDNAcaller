@@ -37,11 +37,13 @@ num_cells=$(echo "$directories" | wc -l | sed 's/^[[:space:]]*//')
 echo "Sample $sample_name | Found $num_cells cells..."
 sleep 0.5
 
+app_string="_cache"
+
 if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summary_only_lower" != "t" ]]; then
   echo "Sample $sample_name | Processing mode."
   sleep 0.5
 
-  mkdir -p "$output_dir/ecDNA_prediction_$sample_name"
+  mkdir -p "$output_dir/$sample_name$app_string"
 
   export script_dir
   export cell_name
@@ -67,7 +69,7 @@ else
 
 fi
 
-list_results=$(find "$output_dir/ecDNA_prediction_$sample_name" -mindepth 1 -maxdepth 1 -type f | grep -Ev '/\.DS_Store$' | sort -n)
+list_results=$(find "$output_dir/$sample_name$app_string" -mindepth 1 -maxdepth 1 -type f | grep -Ev '/\.DS_Store$' | sort -n)
 num_results=$(echo "$list_results" | wc -l | sed 's/^[[:space:]]*//')
 
 if [[ $num_results -ne $num_cells ]]; then
