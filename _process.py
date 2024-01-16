@@ -1,3 +1,7 @@
+# _process.py
+# Author: Ming Hu (hum@ccf.org), Jiachen Sun (jxs2269@case.edu)
+# Date: Jan. 2024
+
 import os
 
 os.environ['OPENBLAS_NUM_THREADS'] = '1'

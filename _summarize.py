@@ -1,3 +1,7 @@
+# _summarize.py
+# Author: Ming Hu (hum@ccf.org), Jiachen Sun (jxs2269@case.edu)
+# Date: Jan. 2024
+
 import os
 import sys
 import time

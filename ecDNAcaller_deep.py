@@ -1,3 +1,8 @@
+# ecDNAcaller_deep.py
+# Deep Learning-Based ecDNAcaller
+# Author: Jiachen Sun (jxs2269@case.edu)
+# Date: Jan. 2024
+
 import os
 import random
 import sys

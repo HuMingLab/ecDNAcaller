@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ecDNAcaller
+# Logistic Regression-Based ecDNAcaller
+# Author: Ming Hu (hum@ccf.org), Jiachen Sun (jxs2269@case.edu)
+# Date: Jan. 2024
+
 echo "Logistic Regression-Based ecDNAcaller"
 sleep 0.5
 

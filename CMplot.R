@@ -1,3 +1,7 @@
+# CMplot.R
+# Author: Ming Hu (hum@ccf.org)
+# Date: Jan. 2024
+
 library("CMplot")
 
 count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
