@@ -63,7 +63,7 @@ Then clone this repository to a local directory.
 
 ## Test Run
 
-1. Download the example data (LC675 brain tumor dataset) and extract to a local directory.
+1. Make sure the example data (LC675 brain tumor dataset) is downloaded.
 
 2. Run command below (modify `-t` of `ecDNAcaller` and the last parameter of `ecDNAcaller_deep.py` according to the
    number of threads available):
