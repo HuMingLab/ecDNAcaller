@@ -82,7 +82,7 @@ python ecDNAcaller_deep.py example_data example_out/deep 32
 6. Modify the following line with the actual path of files above in `CMPlot.R`:
 
 ```R
-count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
+count_freq_file <- "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
 ```
 
 7. Then run `CMPlot.R` in interactive mode and generate plots.

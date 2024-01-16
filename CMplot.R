@@ -4,7 +4,7 @@
 
 library("CMplot")
 
-count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
+count_freq_file <- "example_out/ecDNA_summary_example_data_0.95/example_data_count_freq.txt"
 
 a <- read.table(count_freq_file, header = T)
 for (i in seq_len(nrow(a))) {
