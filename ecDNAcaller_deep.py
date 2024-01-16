@@ -81,7 +81,7 @@ def slide(matrix, window_0, window_1):
     return test_tensor, centers
 
 
-def transform_file(matrix, chr_index, sample_name, output_dir, type="ecDNA"):
+def transform_file(matrix, chr_index, sample_name, output_dir, type):
     matrix = matrix.astype(int)
 
     if type == "ecDNA":
@@ -119,8 +119,6 @@ def transform_file(matrix, chr_index, sample_name, output_dir, type="ecDNA"):
         print("Sample", sample_name, "| Cache cleared.")
 
         exit(1)
-
-
 
 
 def summarize(results, chr_index, sample_name, output_dir, wsize):
