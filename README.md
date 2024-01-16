@@ -33,7 +33,7 @@ In `ecDNAcaller`:
 ####################
 cnv_name="1000000.CNV.bedGraph"
 mat_name="matrix.mtx"
-lm_dir=$script_dir"/coef_model_brain.txt"
+lm_dir=$script_dir"/lm_coef_model.txt"
 ####################
 ```
 
