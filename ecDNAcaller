@@ -19,7 +19,7 @@ directories=$(find "$input_dir" -mindepth 1 -maxdepth 1 -type d | grep -Ev '/\.D
 ####################
 cnv_name="1000000.CNV.bedGraph"
 mat_name="matrix.mtx"
-lm_dir=$script_dir"/coef_model_brain.txt"
+lm_dir=$script_dir"/lm_coef_model.txt"
 ####################
 
 if [[ -z $script_dir || -z $lm_dir || -z $cnv_name || -z $mat_name || -z $input_dir || -z $prob_cutoff || -z $output_dir ]]; then

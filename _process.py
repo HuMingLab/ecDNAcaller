@@ -106,7 +106,7 @@ res.loc[non_zero_sum_rows, 'gini'] = gini_values[non_zero_sum_rows]
 # %%
 res['log2ratio'] = round(np.log2(res['num.inter.bin'] + 1) - np.log2(res['num.intra.bin'] + 1), 4)
 # %%
-linear_model = pd.read_csv(lm_dir, sep='\t', header=0)  # , index_col=0)
+linear_model = pd.read_csv(lm_dir, sep='\t', header=0, index_col=0)
 # %%
 input = res.iloc[:, [0, 1, 2, 3, 7, 6]]
 input.columns = ['chr', 'start', 'end', 'cnv', 'ratio', 'gini']
