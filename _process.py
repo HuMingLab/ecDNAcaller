@@ -5,6 +5,7 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 # https://stackoverflow.com/questions/52026652/openblas-blas-thread-init-pthread-create-resource-temporarily-unavailable
 
 import sys
+import time
 
 import numpy as np
 import pandas as pd
@@ -12,27 +13,13 @@ import pygini
 
 # %%
 
-cell_dir = sys.argv[1]
-script_dir = sys.argv[2]
-lm_dir = sys.argv[3]
+cell_dir = sys.argv[1].rstrip('/')
+script_dir = sys.argv[2].rstrip('/')
+lm_dir = sys.argv[3].rstrip('/')
 cnv_name = sys.argv[4]
 mat_name = sys.argv[5]
-input_dir = sys.argv[6]
-output_dir = sys.argv[7]
-
-# %%
-
-if cell_dir.endswith('/'):
-    cell_dir = cell_dir.rstrip('/')
-
-if script_dir.endswith('/'):
-    script_dir = script_dir.rstrip('/')
-
-if input_dir.endswith('/'):
-    input_dir = input_dir.rstrip('/')
-
-if output_dir.endswith('/'):
-    output_dir = output_dir.rstrip('/')
+input_dir = sys.argv[6].rstrip('/')
+output_dir = sys.argv[7].rstrip('/')
 
 # %%
 
@@ -118,7 +105,17 @@ res['pred'] = 1 / (1 + np.exp(-res['eta']))
 res.loc[res['gini'].isna(), 'pred'] = 0
 
 # %%
+try:
+    res.to_csv(output_file_path, sep='\t', index=False, header=True, quoting=0)
+except KeyboardInterrupt:
+    print("Cell", cell_name, "| File writing interrupted.")
 
-res.to_csv(output_file_path, sep='\t', index=False, header=True, quoting=0)
+    os.remove(output_file_path)
+
+    time.sleep(0.5)
+    print("Cell", cell_name, "| Cache cleared.")
+
+    exit(1)
+
 
 print("Cell", cell_name, "| Processed.")

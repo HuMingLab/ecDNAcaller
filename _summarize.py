@@ -1,17 +1,12 @@
 import os
 import sys
+import time
 
 import pandas as pd
 
-input_dir = sys.argv[1]
-output_dir = sys.argv[2]
+input_dir = sys.argv[1].rstrip('/')
+output_dir = sys.argv[2].rstrip('/')
 prob_cutoff = sys.argv[3]
-
-if input_dir.endswith('/'):
-    input_dir = input_dir.rstrip('/')
-
-if output_dir.endswith('/'):
-    output_dir = output_dir.rstrip('/')
 
 sample_name = input_dir.split('/')[-1]
 prediction_dir = output_dir + "/" + "ecDNA_prediction_" + sample_name
@@ -69,13 +64,6 @@ final_pred.columns = final_pred.columns.str.replace('.txt', '')
 if not os.path.exists(summary_dir):
     os.makedirs(summary_dir)
 
-final_cnv.to_csv(f'{summary_dir}/{sample_name}_cnv.txt', sep='\t', index=False)
-final_ratio.to_csv(f'{summary_dir}/{sample_name}_ratio.txt', sep='\t', index=False)
-final_gini.to_csv(f'{summary_dir}/{sample_name}_gini.txt', sep='\t', index=False)
-final_pred.to_csv(f'{summary_dir}/{sample_name}_pred.txt', sep='\t', index=False)
-
-# %%
-
 binary_pred = final_pred.iloc[:, 3:]
 binary_pred = (binary_pred > float(prob_cutoff)).astype(int)
 
@@ -85,6 +73,25 @@ freq = count / len(binary_pred.columns)
 final_count_freq = pd.concat([coord, count, freq], axis=1)
 final_count_freq.columns = ['chr', 'start', 'end', 'count', 'freq']
 
-final_count_freq.to_csv(f'{summary_dir}/{sample_name}_count_freq.txt', sep='\t', index=False)
+try:
+    final_cnv.to_csv(f'{summary_dir}/{sample_name}_cnv.txt', sep='\t', index=False)
+    final_ratio.to_csv(f'{summary_dir}/{sample_name}_ratio.txt', sep='\t', index=False)
+    final_gini.to_csv(f'{summary_dir}/{sample_name}_gini.txt', sep='\t', index=False)
+    final_pred.to_csv(f'{summary_dir}/{sample_name}_pred.txt', sep='\t', index=False)
+    final_count_freq.to_csv(f'{summary_dir}/{sample_name}_count_freq.txt', sep='\t', index=False)
+
+except KeyboardInterrupt:
+    print("Sample", sample_name, "| File writing interrupted.")
+
+    os.remove(f'{summary_dir}/{sample_name}_cnv.txt')
+    os.remove(f'{summary_dir}/{sample_name}_ratio.txt')
+    os.remove(f'{summary_dir}/{sample_name}_gini.txt')
+    os.remove(f'{summary_dir}/{sample_name}_pred.txt')
+    os.remove(f'{summary_dir}/{sample_name}_count_freq.txt')
+
+    time.sleep(0.5)
+    print("Sample", sample_name, "| Cache cleared.")
+
+    exit(1)
 
 print("Sample", sample_name, "| Summarized.")

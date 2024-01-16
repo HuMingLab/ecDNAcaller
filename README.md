@@ -69,15 +69,15 @@ Then clone this repository to a local directory.
    number of threads available):
 
 ```bash
-sh ecDNAcaller -i example_data -o example_out_1 -p 0.95 -t 32
+sh ecDNAcaller -i example_data -o example_out/lm -p 0.95 -t 32
 
-python ecDNAcaller_deep.py example_data example_out_2 32
+python ecDNAcaller_deep.py example_data example_out/deep 32
 ```
 
-3. Find `example_data_count_freq.txt` in directory `example_out_1/ecDNA_summary_example_data_0.95`
+3. Find `example_data_count_freq.txt` in directory `example_out/lm/ecDNA_summary_example_data_0.95`
 
 4. Find `example_data_summary_all.txt`, `example_data_summary_ecDNA.txt` and `example_data_summary_HSR.txt` in
-   directory `example_out_2`.
+   directory `example_out/deep`.
 
 5. Modify the following line with the actual path of files above in `CMPlot.R`:
 
@@ -92,9 +92,9 @@ count_freq_file = "example_out/ecDNA_summary_example_data_0.95/example_data_coun
 ### 1. ecDNAcaller
 
 ```bash
-sh ecDNAcaller -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <THREADS>
+sh ecDNAcaller -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROB_THRESHOLD> -t <NUM_THREADS>
 
-sh ecDNAcaller -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROBABILITY_THRESHOLD> -t <THREADS> -s <BOOLEAN_OPTION>
+sh ecDNAcaller -i <INPUT_PATH> -o <OUTPUT_PATH> -p <PROB_THRESHOLD> -t <NUM_THREADS> -s <BOOL_OPTION>
 ```
 
 **Arguments:**
@@ -156,14 +156,18 @@ the first 2 bins of chromosome 1 and the last 2 bins of chromosome X will be pad
 The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell on
 a single CPU core (Apple M1 Pro), which is approximately 5 times faster than the logistic regression model.
 
-Note: to reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to
+Unlike the logistic regression-based model, this deep learning-based model does not generate caches (individual files for each cell),
+but it can be fast enough to reprocess all cells in a reasonable amount of time after an interruption.
+
+Note: to strictly reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to
 enable DEV mode, such as `32d`.
 This will make the model ignore cells with a valid contact matrix file but without a valid CNV file (which is relatively rare).
 Thus, the validation of this deep learning-based model will be based
 on the exactly same set of cells as the logistic regression-based model.
 This is because CNV files are mandatory for the logistic regression-based model, but not required for the deep
 learning-based model.
-If DEV mode is disabled, the model will process all cells that have a readable contact matrix file, which may (in some cases) result in a slightly different, but more accurate result.
+If DEV mode is disabled, the model will process all cells that have a readable contact matrix file, which may (in some cases) result in a slightly different, 
+but more accurate result.
 
 ### 3. Manhattan plot
 

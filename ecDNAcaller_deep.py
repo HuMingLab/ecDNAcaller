@@ -108,7 +108,19 @@ def transform_file(matrix, chr_index, sample_name, output_dir, type="ecDNA"):
 
     freq = freq[freq.columns[2:].tolist() + freq.columns[:2].tolist()]
 
-    freq.to_csv(output_dir + "/" + sample_name + "_summary_" + type + ".txt", index=False, sep="\t")
+    try:
+        freq.to_csv(output_dir + "/" + sample_name + "_summary_" + type + ".txt", index=False, sep="\t")
+    except KeyboardInterrupt:
+        print("Sample", sample_name, "| File writing interrupted.")
+
+        os.remove(output_dir + "/" + sample_name + "_summary_" + type + ".txt")
+
+        time.sleep(0.5)
+        print("Sample", sample_name, "| Cache cleared.")
+
+        exit(1)
+
+
 
 
 def summarize(results, chr_index, sample_name, output_dir, wsize):
@@ -235,9 +247,18 @@ if __name__ == '__main__':
 
     print("Sample", sample_name, f'| Found {len(dir0)} cells...')
 
-    with Pool(processes=num_processes) as pool:
-        func = partial(process_file, model, chr_index, wsize)
-        results = pool.map(func, dir0)
+    try:
+        with Pool(processes=num_processes) as pool:
+            func = partial(process_file, model, chr_index, wsize)
+            results = pool.map(func, dir0)
+
+    except KeyboardInterrupt:
+        print("Sample", sample_name, "| Process interrupted.")
+
+        exit(1)
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     summarize(results, chr_index, sample_name, output_dir, wsize)
 

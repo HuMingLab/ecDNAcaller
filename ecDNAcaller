@@ -78,6 +78,4 @@ fi
 
 python $script_dir/_summarize.py "$input_dir" "$output_dir" "$prob_cutoff"
 
-echo "Sample $sample_name | Found $num_results cells with ecDNA."
-
 exit 0
