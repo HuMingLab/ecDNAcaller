@@ -29,11 +29,10 @@ the section below if needed:
 
 In `ecDNAcaller`:
 
-```
+```bash
 ####################
 cnv_name="1000000.CNV.bedGraph"
 mat_name="matrix.mtx"
-lm_dir=$script_dir"/lm_coef_model.txt"
 ####################
 ```
 
@@ -41,7 +40,7 @@ lm_dir=$script_dir"/lm_coef_model.txt"
 
 In `ecDNAcaller_deep.py`:
 
-```
+```R
 ####################
 mat_name = "matrix.mtx"
 ####################
