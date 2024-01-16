@@ -74,10 +74,10 @@ final_count_freq = pd.concat([coord, count, freq], axis=1)
 final_count_freq.columns = ['chr', 'start', 'end', 'count', 'freq']
 
 try:
-    final_cnv.to_csv(f'{summary_dir}/bin_barcode_matrix_cnv.txt', sep='\t', index=False)
-    final_ratio.to_csv(f'{summary_dir}/bin_barcode_matrix_ratio.txt', sep='\t', index=False)
-    final_gini.to_csv(f'{summary_dir}/bin_barcode_matrix_gini.txt', sep='\t', index=False)
-    final_pred.to_csv(f'{summary_dir}/bin_barcode_matrix_pred.txt', sep='\t', index=False)
+    final_cnv.to_csv(f'{summary_dir}/{sample_name}_bin_barcode_matrix_cnv.txt', sep='\t', index=False)
+    final_ratio.to_csv(f'{summary_dir}/{sample_name}_bin_barcode_matrix_ratio.txt', sep='\t', index=False)
+    final_gini.to_csv(f'{summary_dir}/{sample_name}_bin_barcode_matrix_gini.txt', sep='\t', index=False)
+    final_pred.to_csv(f'{summary_dir}/{sample_name}_bin_barcode_matrix_pred.txt', sep='\t', index=False)
     final_count_freq.to_csv(f'{summary_dir}/{sample_name}_count_freq_ecDNA.txt', sep='\t', index=False)
 
 except KeyboardInterrupt:
