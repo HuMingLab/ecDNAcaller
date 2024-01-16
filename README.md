@@ -144,6 +144,8 @@ With the same directory hierarchy, this deep learning-based model only requires
 
 ```bash
 python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <NUM_PROCESSES>
+
+python ecDNAcaller_deep.py <INPUT_PATH> <OUTPUT_PATH> <NUM_PROCESSES>d # DEV_MODE
 ```
 
 The script will output three summary files to the designated directory for 1) ecDNA alone, 2) HSR alone and 3) all
