@@ -152,14 +152,14 @@ def process_file(model, chr_index, wsize, path):
             print("Cell", name, "| Error: CNV file not found.")
             return
 
-    test_tensor, centers = slide(torch.from_numpy(mat), wsize, wsize)
+    slide_tensor, centers = slide(torch.from_numpy(mat), wsize, wsize)
 
     with torch.no_grad():
-        test_tensor = test_tensor.unsqueeze(1).float()
+        slide_tensor = slide_tensor.unsqueeze(1).float()
 
-        test_pred = torch.argmax(model(test_tensor, centers), dim=1).detach().numpy()
+        pred = torch.argmax(model(slide_tensor, centers), dim=1).detach().numpy()
 
-        result = pd.concat([pd.DataFrame({name: test_pred}, index=range(2, len(test_pred) + 2))], axis=1)
+        result = pd.concat([pd.DataFrame({name: pred}, index=range(2, len(pred) + 2))], axis=1)
 
         print("Cell", name, "| Processed.")
 
