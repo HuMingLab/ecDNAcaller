@@ -17,6 +17,8 @@ sample_name = input_dir.split('/')[-1]
 prediction_dir = output_dir + "/" + "ecDNA_prediction_" + sample_name
 summary_dir = output_dir + "/" + "ecDNA_summary_" + sample_name + '_' + prob_cutoff
 
+print("Sample", sample_name, "| Summarizing ecDNA...")
+
 # %%
 
 prediction_file_list = sorted(os.listdir(prediction_dir))
@@ -85,4 +87,4 @@ final_count_freq.columns = ['chr', 'start', 'end', 'count', 'freq']
 
 final_count_freq.to_csv(f'{summary_dir}/{sample_name}_count_freq.txt', sep='\t', index=False)
 
-print("Sample", sample_name, "summarized.")
+print("Sample", sample_name, "| Summarized.")

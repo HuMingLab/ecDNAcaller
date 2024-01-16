@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 from functools import partial
 
 import numpy as np
@@ -85,16 +86,16 @@ def transform_file(matrix, chr_index, sample_name, output_dir, type="ecDNA"):
 
     if type == "ecDNA":
         matrix = matrix.replace(2, 0)
-        print("Summarizing ecDNA...")
+        print("Sample", sample_name, "| Summarizing ecDNA...")
     elif type == "HSR":
         matrix = matrix.replace(1, 0)
         matrix = matrix.replace(2, 1)
-        print("Summarizing HSR...")
+        print("Sample", sample_name, "| Summarizing HSR...")
     elif type == "all":
         matrix = matrix.replace(2, 1)
-        print("Summarizing all...")
+        print("Sample", sample_name, "| Summarizing all...")
     else:
-        print("Invalid type.")
+        print("Sample", sample_name, "| Invalid type.")
 
     freq = pd.DataFrame({"count": matrix.sum(axis=1), "freq": matrix.sum(axis=1) / matrix.shape[1]})
 
@@ -126,21 +127,19 @@ def summarize(results, chr_index, sample_name, output_dir, wsize):
 def process_file(model, chr_index, wsize, path):
     name = path.split("/")[-1]
 
-    print("Processing", name)
-
     try:
         mat = read_mtx(path + "/" + mat_name, chr_index)
     except:
-        print("Error reading mtx file.")
+        print("Cell", name, "| Error: Cannot read mtx file.")
         return
 
     if not mat.shape == (msize, msize):
-        print("Matrix shape mismatch.")
+        print("Cell", name, "| Error: Matrix shape mismatch.")
         return
 
     if dev_mode:
         if not os.path.exists(path + "/1000000.CNV.bedGraph"):
-            print("DEV_MODE: CNV file not found.")
+            print("Cell", name, "| Error: CNV file not found.")
             return
 
     test_tensor, centers = slide(torch.from_numpy(mat), wsize, wsize)
@@ -151,6 +150,8 @@ def process_file(model, chr_index, wsize, path):
         test_pred = torch.argmax(model(test_tensor, centers), dim=1).detach().numpy()
 
         result = pd.concat([pd.DataFrame({name: test_pred}, index=range(2, len(test_pred) + 2))], axis=1)
+
+        print("Cell", name, "| Processed.")
 
         return result
 
@@ -224,10 +225,15 @@ model.eval()
 dir0 = sorted([input_dir + "/" + d for d in os.listdir(input_dir) if ".DS_Store" not in d])
 
 if __name__ == '__main__':
+    print("Deep Learning-Based ecDNAcaller")
+
+    time.sleep(0.5)
+
     if dev_mode:
         print("DEV_MODE: Ignore cells without readable CNV file.")
+        time.sleep(0.5)
 
-    print(f'Found {len(dir0)} cells...')
+    print("Sample", sample_name, f'| Found {len(dir0)} cells...')
 
     with Pool(processes=num_processes) as pool:
         func = partial(process_file, model, chr_index, wsize)
@@ -235,4 +241,4 @@ if __name__ == '__main__':
 
     summarize(results, chr_index, sample_name, output_dir, wsize)
 
-    print("Sample", sample_name, "summarized.")
+    print("Sample", sample_name, "| Summarized.")

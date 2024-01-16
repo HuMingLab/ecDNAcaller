@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Logistic Regression-Based ecDNAcaller"
+sleep 0.5
+
 script_path="$(readlink -f "$0")"
 script_dir="$(dirname "$script_path")"
 
@@ -28,12 +31,16 @@ if [[ -z $script_dir || -z $lm_dir || -z $cnv_name || -z $mat_name || -z $input_
 fi
 
 summary_only_lower=$(echo "$summary_only" | tr '[:upper:]' '[:lower:]')
+sample_name=$(basename "$input_dir")
+
+num_cells=$(echo "$directories" | wc -l | sed 's/^[[:space:]]*//')
+echo "Sample $sample_name | Found $num_cells cells..."
+sleep 0.5
 
 if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summary_only_lower" != "t" ]]; then
-  echo "Processing mode."
-  echo "ecDNAfinder found $(echo "$directories" | wc -l | sed 's/^[[:space:]]*//') cell(s)"
+  echo "Sample $sample_name | Processing mode."
+  sleep 0.5
 
-  sample_name=$(basename "$input_dir")
   mkdir -p "$output_dir/ecDNA_prediction_$sample_name"
 
   export script_dir
@@ -55,10 +62,22 @@ if [[ "$summary_only_lower" != "1" && "$summary_only_lower" != "true" && "$summa
   echo "$directories" | parallel -j $max_cores execute_command
 
 else
-  echo "Summary-only mode."
+  echo "Sample $sample_name | Summary-only mode."
+  sleep 0.5
 
 fi
 
+list_results=$(find "$output_dir/ecDNA_prediction_$sample_name" -mindepth 1 -maxdepth 1 -type f | grep -Ev '/\.DS_Store$' | sort -n)
+num_results=$(echo "$list_results" | wc -l | sed 's/^[[:space:]]*//')
+
+if [[ $num_results -ne $num_cells ]]; then
+  echo "Sample $sample_name | Error: Processing incomplete."
+
+  exit 1
+fi
+
 python $script_dir/_summarize.py "$input_dir" "$output_dir" "$prob_cutoff"
+
+echo "Sample $sample_name | Found $num_results cells with ecDNA."
 
 exit 0
