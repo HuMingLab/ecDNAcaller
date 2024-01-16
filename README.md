@@ -154,8 +154,7 @@ barcodes. In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represe
 the first 2 bins of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
 
 The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell per core (Apple M1 Pro), which is approximately 5X faster than the logistic regression model.
-
-Unlike the logistic regression-based model, this deep learning-based model does not generate caches (individual files for each cell),
+The deep learning-based model does not generate caches (individual files for each cell),
 but it can be fast enough to reprocess all cells in a reasonable amount of time after an interruption.
 
 Note: to strictly reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to
