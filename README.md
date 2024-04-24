@@ -1,6 +1,6 @@
 # ecDNAcaller
 
-**Last updated: Jan. 15, 2024**
+**Last updated: Apr. 24, 2024**
 
 ## Prerequisites
 
@@ -22,8 +22,8 @@
 * **Copy number variation data** (for logistic regression-based model only)
 * **Single-cell Hi-C contact matrices**
 
-Note: see **File format requirements** for examples. File names are currently hard-coded. Modify
-the section below if needed:
+Note: All files are required to be at 1M resolution. Reliability is not guaranteed at other resolutions. See **File
+format requirements** for examples. File names are currently hard-coded. Modify the section below if needed:
 
 #### For logistic regression-based model:
 
@@ -155,18 +155,22 @@ bin-barcode binary matrix file in which row indices represent 10Mb bins from chr
 barcodes. In the matrix, 0 represents *None*, 1 represents *ecDNA* and 2 represents *HSR*. Due to the algorithm design,
 the first 2 bins of chromosome 1 and the last 2 bins of chromosome X will be padded with 0s.
 
-The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell per core (Apple M1 Pro), which is approximately 5X faster than the logistic regression model.
+The model currently runs on CPU only to allow for multiprocessing. Processing speed is at about 1.2 seconds per cell per
+core (Apple M1 Pro), which is approximately 5X faster than the logistic regression model.
 The deep learning-based model does not generate cache (individual files for each cell),
 but it can be fast enough to reprocess all cells in a reasonable amount of time after an interruption.
 
-Note: to strictly reproduce the results in the paper, please add a `d` at the end of the last parameter (without a space) to
+Note: to strictly reproduce the results in the paper, please add a `d` at the end of the last parameter (without a
+space) to
 enable DEV mode, such as `32d`.
-This will make the model ignore cells with a valid contact matrix file but without a valid CNV file (which is relatively rare).
+This will make the model ignore cells with a valid contact matrix file but without a valid CNV file (which is relatively
+rare).
 Thus, the validation of this deep learning-based model will be based
 on the exactly same set of cells as the logistic regression-based model.
 This is because CNV files are mandatory for the logistic regression-based model, but not required for the deep
 learning-based model.
-If DEV mode is disabled, the model will process all cells that have a readable contact matrix file, which may (in some cases) result in a slightly different, 
+If DEV mode is disabled, the model will process all cells that have a readable contact matrix file, which may (in some
+cases) result in a slightly different,
 but more accurate result.
 
 ### 3. Manhattan plot
