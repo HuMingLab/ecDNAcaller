@@ -1,7 +1,7 @@
 # ecDNAcaller_deep.py
 # Deep Learning-Based ecDNAcaller
 # Author: Jiachen Sun (jxs2269@case.edu)
-# Date: Jan. 2024
+# Date: Apr. 2024
 
 import os
 import random
@@ -41,7 +41,8 @@ mat_name = "matrix.mtx"
 wsize = 5
 msize = 3044
 
-chr_size = [249, 243, 199, 191, 182, 171, 160, 146, 139, 134, 136, 134, 115, 108, 102, 91, 84, 81, 59, 65, 47, 51, 157]
+chr_size = chr_index["loc"].str.split("_").str[0].str.replace("chr", "").str.replace("X", "99").astype(
+    int).value_counts().sort_index().tolist()
 
 random.seed(42)
 torch.manual_seed(42)
