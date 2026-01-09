@@ -235,7 +235,10 @@ class CNN(nn.Module):
 
 
 model = CNN()
-model.load_state_dict(torch.load("model_dec20_2_multi.pt"))
+# Without map_location="cpu" the MPS model (saved on a Mac) will not be able to load
+# on other OSes. This does not mean the model runs on the CPU, just that it is loaded
+# there first instead of directly to the GPU/accelerator.
+model.load_state_dict(torch.load("model_dec20_2_multi.pt", map_location="cpu"))
 model.eval()
 
 dir0 = sorted([input_dir + "/" + d for d in os.listdir(input_dir) if ".DS_Store" not in d])
