@@ -11,7 +11,7 @@
     * **pygini** (tested on 1.0.1)
     * **pandas** (tested on 2.1.2)
     * **numpy** (tested on 1.26.0)
-    * **PyTorch** ((tested on 2.1.2, for deep learning-based model only)
+    * **PyTorch** (tested on 2.2.1, for deep learning-based model only)
     * **scipy** (tested on 1.11.4, for deep learning-based model only)
 * **R** (tested on 4.3.2)
     * **CMplot** (tested on 4.4.3)
