@@ -239,6 +239,11 @@ chr1	1000000	2000000	chr20	3000000	4000000	1
 chr1	1000000	2000000	chr20	61000000	62000000	1
 ```
 
+## Cite this repository
+
+If you include this software in your work, please cite:
+Chang, L., Xie, Y., Taylor, B. et al. Droplet Hi-C enables scalable, single-cell profiling of chromatin architecture in heterogeneous tissues. Nat Biotechnol 43, 1694–1707 (2025). https://doi.org/10.1038/s41587-024-02447-1
+
 ## References
 
 * O. Tange (2011): GNU Parallel - The Command-Line Power Tool, The USENIX Magazine, February 2011:42-47.
@@ -259,7 +264,7 @@ chr1	1000000	2000000	chr20	61000000	62000000	1
   Eric W. Moore, Jake VanderPlas, Denis Laxalde, Josef Perktold, Robert Cimrman, Ian Henriksen, E.A. Quintero, Charles R
   Harris, Anne M. Archibald, Antônio H. Ribeiro, Fabian Pedregosa, Paul van Mulbregt, and SciPy 1.0 Contributors. (2020)
   SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python. Nature Methods, 17(3), 261-272.
-
+  
 ## Contact Us
 
 For any question, contact Ming Hu (hum@ccf.org), Jiachen Sun (jxs2269@case.edu), or submit an issue on GitHub.
